@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agentic SEO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+
+<!-- ══ AUTH SCREEN ══ -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">Agentic <em> SEO</em></div>
+    <div class="auth-subtitle">AI-powered SEO content intelligence</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+    </div>
+    <div id="authError" class="auth-error"></div>
+    <div id="loginForm" class="auth-form">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-input" id="loginEmail" placeholder="you@email.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="loginPassword" placeholder="Your password"/>
+      </div>
+      <button class="auth-btn" id="loginBtn" onclick="handleLogin()">Login →</button>
+    </div>
+    <div id="signupForm" class="auth-form" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="signupName" placeholder="Enter name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-input" id="signupEmail" placeholder="you@email.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters"/>
+      </div>
+      <button class="auth-btn" id="signupBtn" onclick="handleSignup()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="mainApp">
+
+  <!-- ACCOUNT PANEL OVERLAY -->
+  <div class="acct-overlay" id="acctOverlay" onclick="handleAcctOverlayClick(event)">
+    <div class="acct-panel" id="acctPanel">
+      <div class="acct-header">
+        <span class="acct-header-title">My Account</span>
+        <button class="acct-close" onclick="closeAcctPanel()">✕</button>
+      </div>
+      <div class="acct-body">
+        <div class="acct-avatar-row">
+          <div class="acct-avatar-lg" id="acctAvatarLg">U</div>
+          <div class="acct-name-block">
+            <div class="acct-display-name" id="acctDisplayName">—</div>
+            <div class="acct-display-email" id="acctDisplayEmail">—</div>
+          </div>
+        </div>
+        <div class="acct-info-row">
+          <span class="acct-info-label">Full Name</span>
+          <span class="acct-info-value" id="acctInfoName">—</span>
+        </div>
+        <div class="acct-info-row">
+          <span class="acct-info-label">Email Address</span>
+          <span class="acct-info-value" id="acctInfoEmail">—</span>
+        </div>
+        <div class="acct-divider"></div>
+        <div class="acct-danger-label">⚠ Danger Zone</div>
+        <p class="acct-danger-desc">Permanently deletes your account, all search history, and all data. This cannot be undone.</p>
+        <div id="acctDeleteStep1">
+          <button class="delete-acct-btn" onclick="showDeleteConfirm()">🗑 Delete My Account</button>
+        </div>
+        <div class="acct-confirm" id="acctDeleteStep2">
+          <div class="acct-confirm-msg">
+            Are you absolutely sure? All your searches and data will be <strong>permanently erased</strong>.
+          </div>
+          <div class="acct-confirm-row">
+            <button class="confirm-yes" id="confirmYesBtn" onclick="deleteAccount()">Yes, Delete</button>
+            <button class="confirm-no" onclick="hideDeleteConfirm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="logo">Agentic <em> SEO</em></div>
+    <div class="nav-right">
+      <div id="statusBadge">
+        <span class="dot"></span>
+        <span id="statusText">IDLE</span>
+      </div>
+      <div class="user-pill" onclick="openAcctPanel()" title="View account">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span class="user-name" id="userNameDisplay">User</span>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="layout">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-label">
+          Target Keyword
+          <span style="font-size:0.6rem;color:#bbb;font-weight:400;letter-spacing:0.5px"></span>
+        </div>
+        <div class="card-body">
+          <div class="input-row">
+            <input type="text" id="keywordInput" placeholder="Enter keyword to start"/>
+            <button id="newSearchBtn" title="Start new search" onclick="startNewSearch()">＋</button>
+          </div>
+          <button id="runBtn" onclick="runWorkflow()">
+            <span id="btnText">Run SEO Workflow</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Agent Pipeline</div>
+        <div class="pipeline">
+          <div class="agent-row" id="row-competitor">
+            <div class="agent-icon">🔍</div>
+            <div class="agent-info">
+              <div class="agent-name">Competitor Intelligence</div>
+              <div class="agent-sub">Scans top ranking pages</div>
+            </div>
+            <div class="agent-dot"></div>
+          </div>
+          <div class="agent-row" id="row-gap">
+            <div class="agent-icon">⚡</div>
+            <div class="agent-info">
+              <div class="agent-name">Gap Analysis</div>
+              <div class="agent-sub">Finds missing content</div>
+            </div>
+            <div class="agent-dot"></div>
+          </div>
+          <div class="agent-row" id="row-writer">
+            <div class="agent-icon">✍️</div>
+            <div class="agent-info">
+              <div class="agent-name">Article Generation</div>
+              <div class="agent-sub">Writes final article</div>
+            </div>
+            <div class="agent-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="console" id="console">
+        <div class="log-line">
+          <span class="log-time">[00:00:00]</span>
+          <span class="log-default">// System ready. Enter a keyword to begin.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="output-panel">
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-results" onclick="switchTab('results')">Results</button>
+        <button class="tab-btn" id="tab-article" onclick="switchTab('article')">Full Article</button>
+      </div>
+      <div class="output-body">
+        <div id="placeholder">
+          <div class="ph-icon">📊</div>
+          <h3>Analysis Pending</h3>
+          <p>Enter a keyword and run the workflow. Results will appear here.</p>
+        </div>
+        <div class="view" id="view-results">
+          <div class="section-block">
+            <div class="section-block-header">🌐 Top Ranking Websites <span class="badge">LIVE SERP</span></div>
+            <div class="section-block-body">
+              <div class="site-chips" id="siteChips"></div>
+              <div class="comp-summary" id="compSummary"></div>
+            </div>
+          </div>
+          <div class="section-block">
+            <div class="section-block-header">⚡ Questions Competitors Forgot <span class="badge">GAPS</span></div>
+            <div class="section-block-body">
+              <div class="gaps-list" id="gapsList"></div>
+            </div>
+          </div>
+        </div>
+        <div class="view" id="view-article">
+          <div class="article-body" id="articleBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR — HISTORY -->
+    <div class="history-panel">
+      <div class="history-card">
+        <div class="card-label">
+          🕐 Search History
+          <button class="refresh-btn" onclick="loadHistory()"></button>
+        </div>
+        <div class="history-list" id="historyList">
+          <div class="history-empty">
+            <span>📂</span>
+            <p>No searches yet. Run your first keyword workflow!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HISTORY DETAIL MODAL -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalKeyword">Keyword</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="mtab-competitors" onclick="switchModalTab('competitors')">Competitors</button>
+      <button class="modal-tab" id="mtab-gaps" onclick="switchModalTab('gaps')">Gaps</button>
+      <button class="modal-tab" id="mtab-article" onclick="switchModalTab('article')">Article</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-competitors" class="comp-summary"></div>
+      <div id="modal-gaps" style="display:none"></div>
+      <div id="modal-article" class="article-body" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/script.js"></script>
+</body>
+</html>
